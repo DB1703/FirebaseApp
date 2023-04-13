@@ -26,7 +26,7 @@ button.addEventListener("click", function(){
     push(ingredientsInDB, inputValue) 
     console.log(`${inputValue} agregado a la base de datos`);
 
-    /* Front */
+    /* Front */ 
 
     clearInputField()
     

@@ -43,3 +43,24 @@ input, button{
     background-color: rgb(155, 187, 181);
     color: white;
 }
+
+/* LIST OF INGREDIENTS */
+
+ul {
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+ul li{
+    list-style-type: none;
+    background-color: rgb(189, 212, 219);
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    border-radius: 8px;
+    flex-grow: 1;
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 20px;
+    text-align: center;
+}

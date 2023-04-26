@@ -51,6 +51,8 @@ ul {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 20px;
 }
 
 ul li{

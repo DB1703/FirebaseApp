@@ -1,6 +1,6 @@
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js"
-import {getDatabase, ref, push, onValue} from "https://www.gstatic.com/firebasejs/9.18.0/firebase-database.js"
+import {getDatabase, ref, push, onValue, remove} from "https://www.gstatic.com/firebasejs/9.18.0/firebase-database.js"
 
 const appSettings = {
     databaseURL : "https://fir-mobileapp-78098-default-rtdb.firebaseio.com/"
@@ -32,17 +32,24 @@ button.addEventListener("click", function(){
 })
 
 onValue(ingredientsInDB, function(snapshot){
-    let ingredientsArray = Object.values(snapshot.val())
-
-    clearIngredientsList()
-
-    
-
-    for (let i = 0; i < ingredientsArray.length; i++) {
-        let currentIngredient = ingredientsArray[i]
-
-        appendItemToIngredientsList(currentIngredient)
+    if (snapshot.exists()) {
         
+        let ingredientsArray = Object.entries(snapshot.val())
+        
+        clearIngredientsList()
+    
+        for (let i = 0; i < ingredientsArray.length; i++) {
+            let currentIngredient = ingredientsArray[i]
+            let currentIngredientId = currentIngredient[0]
+            let currentIngredientValue = currentIngredient[1]
+    
+            
+    
+            appendItemToIngredientsList(currentIngredient)
+            
+        }
+    } else {
+        ingredientsList.innerHTML += "Ningún ingrediente por aquí 🍳"
     }
 })
 
@@ -55,8 +62,24 @@ function clearInputField() {
 }
 
 
-function appendItemToIngredientsList(itemValue) {
-    ingredientsList.innerHTML += `<li>${itemValue}</li>`
+function appendItemToIngredientsList(item) {
+    let itemId = item[0] 
+    let itemValue = item[1]
+
+    let newEl = document.createElement("li")
+
+    newEl.textContent = itemValue
+
+    ingredientsList.append(newEl)
+
+    newEl.addEventListener("click", function(){
+        let locationOfIngredientInDB = ref(database,`ingredients/${itemId}`)
+
+        remove(locationOfIngredientInDB)
+        console.log(`${itemValue} elimnado de la base de datos`);
+    })
+
+    
     
 }
 

@@ -3,7 +3,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.18.0/firebas
 import {getDatabase, ref, push, onValue, remove} from "https://www.gstatic.com/firebasejs/9.18.0/firebase-database.js"
 
 const appSettings = {
-    databaseURL : "https://fir-mobileapp-78098-default-rtdb.firebaseio.com/"
+    databaseURL : ""
 }
 
 const app = initializeApp(appSettings)

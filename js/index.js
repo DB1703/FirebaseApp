@@ -1,104 +1,68 @@
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js"
 import {getDatabase, ref, push, onValue, remove} from "https://www.gstatic.com/firebasejs/9.18.0/firebase-database.js"
+import { appSettings } from "./config.js"
 
-const appSettings = {
-    databaseURL : ""
+const app = initializeApp(appSettings);
+const database = getDatabase(app);
+const ingredientsInDB = ref(database, "ingredients");
+
+
+const form = document.getElementById("submit-form");
+const input = document.getElementById("input-field");
+const ingredientsList = document.getElementById("ingredients-list");
+
+
+form.addEventListener("submit", function(event){
+    event.preventDefault();
+    const inputValue = input.value.trim();
+    addIngredient(inputValue);
+});
+
+function addIngredient(inputValue) {
+    clearInputField();
+    if (inputValue === "") return;
+    push(ingredientsInDB, inputValue);
 }
-
-const app = initializeApp(appSettings)
-const database = getDatabase(app)
-const ingredientsInDB = ref(database, "ingredients")
-
-/* console.log(app);
-console.log(database); */
-
-
-const input = document.getElementById("input-field")
-const button = document.getElementById("add-button")
-const ingredientsList = document.getElementById("ingredients-list")
-
-
-button.addEventListener("click", function(){
-    let inputValue = input.value
-    /* FIREBASE */
-    push(ingredientsInDB, inputValue) 
-    console.log(`${inputValue} agregado a la base de datos`);
-    
-    /* Front */ 
-    
-    clearInputField()
-    
-})
 
 onValue(ingredientsInDB, function(snapshot){
     if (snapshot.exists()) {
         
-        let ingredientsArray = Object.entries(snapshot.val())
-        
-        clearIngredientsList()
+        let ingredientsArray = Object.entries(snapshot.val());
+        clearIngredientsList();
     
         for (let i = 0; i < ingredientsArray.length; i++) {
-            let currentIngredient = ingredientsArray[i]
-            let currentIngredientId = currentIngredient[0]
-            let currentIngredientValue = currentIngredient[1]
-    
-            
-    
-            appendItemToIngredientsList(currentIngredient)
-            
+            let currentIngredient = ingredientsArray[i];
+
+            appendItemToIngredientsList(currentIngredient);
         }
     } else {
-        ingredientsList.innerHTML += "Ningún ingrediente por aquí 🍳"
+        ingredientsList.innerHTML = "Ningún ingrediente por aquí 🍳"
     }
 })
 
-function clearIngredientsList(){
-    ingredientsList.innerHTML = ""
+function clearIngredientsList() {
+    ingredientsList.innerHTML = "";
 }
 
 function clearInputField() {
-    input.value = ""
+    input.value = "";
 }
 
 
 function appendItemToIngredientsList(item) {
-    let itemId = item[0] 
-    let itemValue = item[1]
+    let itemId = item[0];
+    let itemValue = item[1];
 
-    let newEl = document.createElement("li")
+    let newEl = document.createElement("li");
+    newEl.setAttribute("id", itemId);
 
-    newEl.textContent = itemValue
+    newEl.textContent = itemValue;
 
-    ingredientsList.append(newEl)
+    ingredientsList.append(newEl);
 
     newEl.addEventListener("click", function(){
-        let locationOfIngredientInDB = ref(database,`ingredients/${itemId}`)
+        let locationOfIngredientInDB = ref(database,`ingredients/${itemId}`);
 
-        remove(locationOfIngredientInDB)
-        console.log(`${itemValue} elimnado de la base de datos`);
+        remove(locationOfIngredientInDB);
     })
-
-    
-    
 }
-
-/* Turning an Object into an Array */
-
-let users = {
-    "00": "debernardifranco2003@gmail.com",
-    "01": "agustinadebernardi@gmail.com",
-    "02": "claudiabnavarro65@gmail.com"
-}
-
-let usersEmails = Object.values(users)
-
-/* console.log(usersEmails); */
-
-let usersIDs = Object.keys(users)
-
-/* console.log(usersIDs); */
-
-let usersEntries = Object.entries(users)
-
-/* console.log(usersEntries); */
